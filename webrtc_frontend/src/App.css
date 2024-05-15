@@ -41,6 +41,148 @@
 
 
 
+.main-container{
+  min-height: 100vh;
+  background: linear-gradient(45deg, rgb(125, 44, 172), #200f20);
+}
 .header-container{
-  height: 10vh;
+  padding: 10px;
+}
+.brand-name h5{
+  color: white;
+  font-size: 2rem;
+}
+
+.tagline-container p{
+  background: #db366d;
+    padding: 10px;
+    text-align: center;
+}
+
+.section-container {
+  display: flex;
+  flex-direction: row;
+  justify-content:space-between;
+  padding: 10px;
+}
+
+
+.form-container {
+  /* background: #db366d; */
+  width: 100%;
+  height: 500px;
+  border-radius: 10px;
+  /* display: block; */
+  /* justify-content: center; */
+  /* backdrop-filter: blur(10px); */
+}
+
+.form-container h5{
+  text-align: center;
+  margin: 10px;
+}
+
+/* .form-container form{
+  flex-direction: column;
+
+} */
+
+.image-container{
+  width:  100%; 
+}
+
+.image-container img{
+
+  width: 100%;
+  object-fit: contain;
+  height: 70%;
+}
+
+
+/* .register-form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    height: 80%;
+    margin: 0 10%;
+    background: white;
+    border-radius: 20px;
+    width: 80%;
+    flex-direction: column;
+    border: 2px solid darkgray;
+
+} */
+
+hr{
+  width: 75%;
+  color: #200f20;
+}
+
+form{
+  background: linear-gradient(6deg,rgb(214, 208, 208),rgb(192, 186, 186));
+  padding: 16px;
+  border-radius: 20px;
+  margin: 5% 10%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80%;
+  border: 1px solid rgba(128, 128, 128, 0.404);
+  box-shadow: 4px 2px 7px 1px rgb(255, 241, 241);
+}
+h4{
+  font-size: 10px;
+  text-align: center;
+  transition: ease-in 2s;
+}
+
+.registerbtn{
+  width: 50%;
+  margin-top: 20px;
+  padding: 10px;
+  height: auto;
+  border: transparent;
+  border-radius: 5px;
+
+  background-color: rgb(125, 44, 172);
+  color: white;
+}
+@media (max-width:706px)
+{
+  .section-container{
+    flex-wrap: wrap;
+  }
+}
+
+
+.formInput{
+  width: 90%;
+  max-width: 100vw;
+}
+
+.inputClass{
+  margin-bottom: 5px;
+  margin-top: 5px;
+  padding: 10px;
+  width: 100% !important;
+  border: 1px solid grey;
+  border-radius: 5px;
+}
+
+.inputClass:hover{
+  border: 2px solid rgb(125, 44, 172) !important;
+}
+
+.navigateBtn{
+  cursor: pointer;
+}
+
+.form-footer{
+  margin: 10px 0;
+}
+
+.form-footer p{
+  font-size: 16px;
 }
