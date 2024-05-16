@@ -43,7 +43,20 @@ const loginUsers = async (req, res, next) => {
   }
 };
 
+const getUsers = async (req,res,next)=>{
+   try{
+    const users = await UsersModel.find({});
+    res.statusCode = 200;
+    res.json({ users: users, status: false });
+   }
+   catch(error)
+   {
+    res.statusCode = 501;
+    res.json({ message: `Unable to fetch users`, status: false });
+   }
+}
 module.exports = {
   registerUsers,
-  loginUsers
+  loginUsers,
+  getUsers
 };

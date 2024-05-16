@@ -186,3 +186,73 @@ h4{
 .form-footer p{
   font-size: 16px;
 }
+
+.brand{
+  display: flex;
+}
+/* Set width of each tab to 50% and set width of button within each tab to 100%*/
+.nav-item{
+  width: 50%;
+  cursor: pointer;
+  background: rgb(125, 44, 172);
+
+}
+.nav-tabs{
+  height: 50px;
+  background: rgb(125, 44, 172);
+
+
+}
+.nav-tabs .nav-link{
+  width: 100%;
+  height: 50px;
+  background: rgb(125, 44, 172);
+  color: rgb(197, 193, 193) !important;
+  font-weight: bold;
+  font-size: 16px !important;
+}
+.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link{
+  width: 100%;
+  border: transparent;
+  border-bottom: 2px solid white !important;
+  box-shadow: 0px 2px 2px rgb(171, 91, 218);
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgb(125, 44, 172) !important;
+  color: white  !important;
+  
+}
+
+.nav-tabs .nav-link:hover{
+  border: transparent ;
+}
+
+.tab__header{
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+  padding: 0px 2%;
+  background:rgb(125, 44, 172) ;
+  color: white;
+
+}
+
+.tab__header .brand{
+  font-size: 1.7rem;
+  font-weight: bold;
+  letter-spacing: 1.5px;
+}
+
+
+.chat__container{
+  display: flex;
+  width: 100%;
+}
+
+.chat__container .users__container{
+  width: 33%;
+  height: 100vh;
+  border: 2px solid black;
+}
