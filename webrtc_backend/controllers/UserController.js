@@ -30,7 +30,7 @@ const loginUsers = async (req, res, next) => {
     const passwrordMatches = await bcrypt.compare(password, findUserWithEmail.password);
     if (passwrordMatches) {
       res.statusCode = 200;
-      res.json({ message: "User Login Successful", status: true });
+      res.json({ message: "User Login Successful", status: true , user:findUserWithEmail});
     }
     else {
       res.statusCode = 501;

@@ -1,18 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import FormInput from './FormInput';
-import axios from 'axios'
-const RegisterForm = () => {
+import axios from 'axios';
+import UserContext from '../socket/loginContext';
 
+const RegisterForm = () => {
     const [title, setTitle] = useState("Register")
-    
+    let currentUser = useContext(UserContext);
     const handleSubmit = async (e) => {
         e.preventDefault();
         let endpoint = title == "Register" ? "registerUser" : "loginUser"
         try {
             const response = await axios.post(`http://localhost:3000/users/${endpoint}`, formValues);
             if (response.data.status && title == "SignIn") {
-               console.log("Logged In successfully");
-               window.location.href="/home";
+                console.log("Logged In successfully");
+                console.log(response.data);
+                currentUser.setUser({
+                    isLogged: true,
+                    userId: response.data.user._id
+                });
+                console.log(currentUser.user);
+                window.location.href="/home";
             }
         }
         catch (error) {
@@ -65,9 +72,9 @@ const RegisterForm = () => {
                     inputField.map((input, index) => (
                         <FormInput key={index} {...input} onChange={onChange} />
                     ))}
-                <button type="submit" className="registerbtn">{title}</button>
+                <button type="submit" className="registerbtn" >{title}</button>
                 <div className="form-footer">
-                    <p>{title =="Register"? 'Already have an account ?':'New to Connect ?'} <span onClick={addUserName} className="navigateBtn">{title=="Register"?'SignIn':'Register'}</span></p>
+                    <p>{title == "Register" ? 'Already have an account ?' : 'New to Connect ?'} <span onClick={addUserName} className="navigateBtn">{title == "Register" ? 'SignIn' : 'Register'}</span></p>
                 </div>
             </form>
 

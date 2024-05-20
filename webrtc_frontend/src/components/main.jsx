@@ -1,7 +1,8 @@
-import React from 'react';
+import React,{useContext} from 'react';
 import RegisterForm from './registerForm';
 import Header from './header';
 import WebrtcImage from '../assets/webrtc_image.png';
+
 
 export const Main = function(){
    return(
