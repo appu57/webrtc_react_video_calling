@@ -4,32 +4,35 @@ import { lookupTable } from "../../actions/taskActions";
 import axios from 'axios';
 import UserDisplay from './UserDisplay';
 import ChatComponent from './chatComponent';
-import UserContext from '../../socket/loginContext';
+import {SocketContext} from '../../socket/socketConnection';
+import { io } from 'socket.io-client';
+import NoUser from './NoUserSelected'
 
 const MainChatPage = () =>{
     let state = useSelector(state=>state.users);//on load of MainChatPage in the useEffect the api is called and dispatched to store which has reducers and reducer now sends user data to all component
-    let [selectedUser,setSelectedUser] = useState("");
+    let [selectedUser,setSelectedUser] = useState({
+        _id:null,
+        username:null
+    });
     let dispatch = useDispatch();
-    useEffect( ()=>{
-        const fetchUsers = async ()=>{
-            const response =await axios.get('http://localhost:3000/users/getUsers');
-            dispatch({type:lookupTable.FETCH_USER,payload:response.data});
-        };
-        fetchUsers();
-    },[]);
+    let currentUser= localStorage.getItem('userId');
 
-    const setSelectedUsers = (e)=>{
-        console.log(e);
-        setSelectedUser(e);
+    const setSelectedUsers = (_id,username)=>{
+        setSelectedUser({
+            _id:_id,
+            username:username
+        });
     }
-    return(
-       <div className="chat__container">
+    return(  
+       <div className="chat__container" >
            <div className="users__container">
              {state?.users?.map((user,index)=>(
                 <UserDisplay key={index} {...user} setUsers={setSelectedUsers} />
              ))}
            </div>
-           <ChatComponent user={selectedUser}/>
+           {selectedUser._id ?(
+           <ChatComponent user={selectedUser.username} key={selectedUser._id}/>
+           ):(<NoUser/>)}
        </div>
     );
 }

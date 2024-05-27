@@ -6,6 +6,8 @@ const cors = require('cors');
 const mongoose= require('mongoose');
 const userRoutes= require('./routes/userRegister');
 const messageRoutes= require('./routes/messageRoutes');
+const cookie= require('cookie-parser')
+const session = require('express-session');
 
 let messageModel = require('./model/MessageModel');
 
@@ -22,6 +24,12 @@ mongoose.connect(url).then(()=>{
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(cors());
+app.use(cookie());
+app.use(session({
+    secret:'secret',
+    resave:false,
+    saveUninitialized:false,
+}))
 app.set('view engine','ejs');
 app.set('views','./views');
 
@@ -38,9 +46,9 @@ server.prependListener("request", (req, res) => {
 });
 io.on('connection',(socket)=>
 {
-    console.log(io);
     const id = socket?.handshake?.auth?.token;
-    socket.emit('user_online',{id:id});
+    console.log(id);
+    socket.emit('user__online',{id:id});
     socket.on('new message',(e)=>{
         socket.emit('new message',e);
     });

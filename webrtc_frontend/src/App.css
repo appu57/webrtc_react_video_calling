@@ -253,7 +253,6 @@ h4{
 
 .chat__container .users__container{
   width: 33%;
-  height: 100vh;
   border-right: 1px solid black;
 }
 
@@ -297,7 +296,7 @@ h4{
     background-repeat: no-repeat;
     background-size: cover;
     background-size: cover;
-    min-height: 854px;
+    min-height: 990px;
     display: flex;
     flex-direction: column;
 }
@@ -310,8 +309,7 @@ h4{
 }
 
 .chat__footer{
-  position: fixed;
-  bottom: 0;
+  bottom: 0;margin: auto;
   background: transparent;
   border: 1px solid gray;
   border-radius: 5px;
@@ -329,4 +327,28 @@ h4{
 .chat__header .user__image__container .circle{
   width: 25px;
   height: 25px;
+}
+.chat__footer{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+}
+
+.chat__footer .input-container{
+  flex: 1;
+}
+
+.chat__footer .icon__container{
+  padding-left: 20px;
+  cursor: pointer;
+}
+
+.no__user{
+  width: 67%;
+  height: 100vh;
+  box-shadow: 0 2px 0px rgb(216, 228, 221);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

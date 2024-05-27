@@ -1,25 +1,26 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useRef } from 'react';
 import FormInput from './FormInput';
 import axios from 'axios';
-import UserContext from '../socket/loginContext';
+import { UserContext } from '../socket/loginContext';
+import {useNavigate} from 'react-router-dom';
+import {SocketContext} from '../socket/socketConnection';
+import { io } from 'socket.io-client';
 
-const RegisterForm = () => {
-    const [title, setTitle] = useState("Register")
-    let currentUser = useContext(UserContext);
+const RegisterForm = ({ setSelected }) => {
+    const [title, setTitle] = useState("Register");
+    const navaigation = useNavigate();
+    let [socket,setSocket] = useContext(SocketContext);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         let endpoint = title == "Register" ? "registerUser" : "loginUser"
         try {
             const response = await axios.post(`http://localhost:3000/users/${endpoint}`, formValues);
             if (response.data.status && title == "SignIn") {
-                console.log("Logged In successfully");
-                console.log(response.data);
-                currentUser.setUser({
-                    isLogged: true,
-                    userId: response.data.user._id
-                });
-                console.log(currentUser.user);
-                window.location.href="/home";
+                localStorage.setItem('userId',response.data.user._id);
+                const Socket = io('http://localhost:3000',{ transports: ['websocket', 'polling', 'flashsocket'] , auth:{token:response.data.user._id} });
+                setSocket(Socket);
+                navaigation('/home')
             }
         }
         catch (error) {

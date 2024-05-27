@@ -1,10 +1,11 @@
-import React,{useContext} from 'react';
+import React,{useContext, useRef} from 'react';
 import RegisterForm from './registerForm';
 import Header from './header';
 import WebrtcImage from '../assets/webrtc_image.png';
-
-
+import {UserContext} from '../socket/loginContext';
 export const Main = function(){
+    let [user,setUser] = useContext(UserContext);
+
    return(
        <div className="main-container w-100">
            <Header/>

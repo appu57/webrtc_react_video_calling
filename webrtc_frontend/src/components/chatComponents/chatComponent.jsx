@@ -1,6 +1,26 @@
-import React from 'react';
+import React, { useEffect,useContext } from 'react';
+import { FaPaperPlane } from 'react-icons/fa';
+import {SocketContext} from '../../socket/socketConnection';
 const ChatComponent = (props) => {
-    const { user } = props
+    const { user } = props;
+    // const socket = useSocket();
+    const [socket ,setSocket] = useContext(SocketContext);
+
+    console.log(socket)
+    const sendMessage=()=>{
+        console.log(socket);
+       
+    }
+    const setUserOnlineStatus=(e)=>{
+        console.log(e);
+    }
+    useEffect(()=>{
+      console.log(socket);
+      socket.on('user__online',setUserOnlineStatus);
+      return()=>{
+          socket.off('user__online')
+      };
+    },[socket]);
     return (
         <div className="chat__content__container">
             <div className="chat__header">
@@ -15,8 +35,13 @@ const ChatComponent = (props) => {
 
             </div>
             <div className="chat__footer">
-
-            </div>
+                <div className="input-container">
+                   <input type="text" className="form-control" />
+                </div>
+                <div className="icon__container" onClick={sendMessage}>
+                 <FaPaperPlane/>
+                </div>
+            </div> 
         </div>
     );
 };

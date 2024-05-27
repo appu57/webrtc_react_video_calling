@@ -29,6 +29,10 @@ const loginUsers = async (req, res, next) => {
   if (findUserWithEmail) {
     const passwrordMatches = await bcrypt.compare(password, findUserWithEmail.password);
     if (passwrordMatches) {
+      // res.cookie('userId',JSON.stringify(findUserWithEmail._id),{
+      //   maxAge:36000,
+      //   httpOnly:true
+      // });
       res.statusCode = 200;
       res.json({ message: "User Login Successful", status: true , user:findUserWithEmail});
     }
@@ -45,7 +49,8 @@ const loginUsers = async (req, res, next) => {
 
 const getUsers = async (req,res,next)=>{
    try{
-    const users = await UsersModel.find({});
+    const users = await UsersModel.find({_id:{$ne:req.body.userId}});
+    console.log(users);
     res.statusCode = 200;
     res.json({ users: users, status: false });
    }
