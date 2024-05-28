@@ -1,25 +1,35 @@
-import React, { useEffect,useContext } from 'react';
+import React, { useEffect,useContext,useState} from 'react';
 import { FaPaperPlane } from 'react-icons/fa';
-import {SocketContext} from '../../socket/socketConnection';
+import {useSocket} from '../../socket/socketConnection';
 const ChatComponent = (props) => {
-    const { user } = props;
+    const { user ,id} = props;
     // const socket = useSocket();
-    const [socket ,setSocket] = useContext(SocketContext);
+    const [message,setMessage]=useState('');
+    const socket = useSocket();
 
-    console.log(socket)
-    const sendMessage=()=>{
-        console.log(socket);
+    const sendMessage=(e)=>{
+        const senderId = localStorage.getItem('userId');
+        const data={
+            senderId:senderId,
+            recieverId:id,
+            message:message
+        }
+        socket.emit('new message',{data:data});
+        setMessage('');
        
     }
     const setUserOnlineStatus=(e)=>{
         console.log(e);
     }
+    const setUserMessage=(e)=>{
+        console.log(e);
+        setMessage(e.target.value);
+    }
+    const fetchNewMessage =(e)=>{
+        console.log(e);
+    }
     useEffect(()=>{
-      console.log(socket);
-      socket.on('user__online',setUserOnlineStatus);
-      return()=>{
-          socket.off('user__online')
-      };
+      socket.on('new message',fetchNewMessage);
     },[socket]);
     return (
         <div className="chat__content__container">
@@ -36,7 +46,7 @@ const ChatComponent = (props) => {
             </div>
             <div className="chat__footer">
                 <div className="input-container">
-                   <input type="text" className="form-control" />
+                   <input type="text" className="form-control" value={message} onChange={setUserMessage} />
                 </div>
                 <div className="icon__container" onClick={sendMessage}>
                  <FaPaperPlane/>

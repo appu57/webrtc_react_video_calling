@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { lookupTable } from "../actions/taskActions";
 import axios from 'axios';
 
-const HomePage = ()=>{
+const HomePage = ({setToken})=>{
     const [selectedTab , setSelectedTab] = useState('tab1');
     let [user,setUser] = useContext(UserContext);
     let dispatch = useDispatch();
@@ -20,6 +20,7 @@ const HomePage = ()=>{
             isLogged:false,
             userId:null
         })
+        setToken(null);
     }
 
     const onTabSelect = (e)=>{

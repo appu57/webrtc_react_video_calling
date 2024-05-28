@@ -3,9 +3,12 @@ import RegisterForm from './registerForm';
 import Header from './header';
 import WebrtcImage from '../assets/webrtc_image.png';
 import {UserContext} from '../socket/loginContext';
-export const Main = function(){
+export const Main = function({setToken}){
     let [user,setUser] = useContext(UserContext);
-
+   const handleUserLogin = (e)=>{
+       console.log(e);
+       setToken(e);
+   }
    return(
        <div className="main-container w-100">
            <Header/>
@@ -17,7 +20,7 @@ export const Main = function(){
                    <div className="image-container mx-auto">
                        <img src={WebrtcImage} alt=""/>
                    </div>
-                    <RegisterForm/>
+                    <RegisterForm setUserLogin={handleUserLogin}/>
                </div>
            </section>
        </div>

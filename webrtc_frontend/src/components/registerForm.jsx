@@ -3,13 +3,10 @@ import FormInput from './FormInput';
 import axios from 'axios';
 import { UserContext } from '../socket/loginContext';
 import {useNavigate} from 'react-router-dom';
-import {SocketContext} from '../socket/socketConnection';
-import { io } from 'socket.io-client';
 
-const RegisterForm = ({ setSelected }) => {
+const RegisterForm = ({ setUserLogin }) => {
     const [title, setTitle] = useState("Register");
     const navaigation = useNavigate();
-    let [socket,setSocket] = useContext(SocketContext);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -18,8 +15,8 @@ const RegisterForm = ({ setSelected }) => {
             const response = await axios.post(`http://localhost:3000/users/${endpoint}`, formValues);
             if (response.data.status && title == "SignIn") {
                 localStorage.setItem('userId',response.data.user._id);
-                const Socket = io('http://localhost:3000',{ transports: ['websocket', 'polling', 'flashsocket'] , auth:{token:response.data.user._id} });
-                setSocket(Socket);
+                console.log(response.data.user._id);
+                setUserLogin(response.data.user._id);
                 navaigation('/home')
             }
         }

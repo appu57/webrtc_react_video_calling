@@ -47,7 +47,7 @@ server.prependListener("request", (req, res) => {
 io.on('connection',(socket)=>
 {
     const id = socket?.handshake?.auth?.token;
-    console.log(id);
+    console.log('user_id',id);
     socket.emit('user__online',{id:id});
     socket.on('new message',(e)=>{
         socket.emit('new message',e);

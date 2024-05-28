@@ -1,23 +1,19 @@
 import React, { useEffect,useContext } from 'react';
 import { FaPaperPlane } from 'react-icons/fa';
-import {SocketContext} from '../../socket/socketConnection';
+import {useSocket} from '../../socket/socketConnection';
 const UserDisplay = (props)=>{
-    console.log(props);
     let {_id , username ,setUsers} = props;
     username = username.split(" ").reduce((acc,curr)=>acc+(curr.charAt(0).toUpperCase()+curr.slice(1)));
     const sendSelectedUser=(e)=>{
       setUsers(_id,username);
     }
-    const [socket ,setSocket] = useContext(SocketContext);
-
-    const setOnline ={
-      // backgroundColor:
-    }
-    const getUser = (e)=>{
+    const socket = useSocket();
+    const getOnlineUser = (e)=>{
       console.log(e);
     }
     useEffect(()=>{
-      socket.on('user__online',getUser);
+      console.log(socket)
+      socket.on('user__online',getOnlineUser);
       return()=>{
           socket.off('user__online')
       };

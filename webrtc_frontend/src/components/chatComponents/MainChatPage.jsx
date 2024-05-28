@@ -31,7 +31,7 @@ const MainChatPage = () =>{
              ))}
            </div>
            {selectedUser._id ?(
-           <ChatComponent user={selectedUser.username} key={selectedUser._id}/>
+           <ChatComponent user={selectedUser.username} key={selectedUser._id} id={selectedUser._id}/>
            ):(<NoUser/>)}
        </div>
     );

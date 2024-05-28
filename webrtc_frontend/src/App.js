@@ -10,7 +10,7 @@ import { Main } from './components/main';
 import HomePage from './components/homePage'
 import { Provider } from 'react-redux';
 import Store from './store';
-import {SocketContext,Socket} from './socket/socketConnection';
+import {SocketProvider} from './socket/socketConnection';
 import {UserContext} from './socket/loginContext';
 import { useState } from 'react';
 
@@ -20,19 +20,19 @@ function App() {
     isLogged: false,
     userId: null
   });
-  const [socket,setSocket]  = useState('');
+  const [token,setToken]  = useState(null);
   return (
     <BrowserRouter>
 
     <UserContext.Provider value={[ user, setUser ]}>
-      <SocketContext.Provider value={[socket,setSocket]}>
         <Provider store={Store}>
+        <SocketProvider  token={token}>
             <Routes>
-              <Route exact path="" Component={Main} />
-              <Route path="home" Component={HomePage} />
+              <Route path='/' element={<Main setToken={setToken}/>} />
+              <Route path="home" element={token? <HomePage setToken ={setToken}/> : <Main setToken={setToken}/>} />
             </Routes>
+            </SocketProvider>
         </Provider>
-      </SocketContext.Provider>
     </UserContext.Provider>
     </BrowserRouter>
 
