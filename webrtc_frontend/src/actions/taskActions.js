@@ -13,3 +13,11 @@ export const addUser = (userdata)=>{
         payload:userdata
     }
 };
+
+export const AddMessage = (message) =>{
+    return {
+        type:lookupTable.ADD_CHATS,
+        payload:message
+    }
+}
+

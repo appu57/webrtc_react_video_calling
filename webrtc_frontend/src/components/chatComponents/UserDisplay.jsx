@@ -12,7 +12,6 @@ const UserDisplay = (props)=>{
       console.log(e);
     }
     useEffect(()=>{
-      console.log(socket)
       socket.on('user__online',getOnlineUser);
       return()=>{
           socket.off('user__online')

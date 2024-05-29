@@ -1,4 +1,4 @@
 
-import {addUser} from './taskActions';
-var actions = {addUser};
-export default actions;
+import {addUser,addMessage} from './taskActions';
+var Actions = {addUser,addMessage};
+export default Actions;

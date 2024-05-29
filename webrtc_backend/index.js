@@ -50,7 +50,7 @@ io.on('connection',(socket)=>
     console.log('user_id',id);
     socket.emit('user__online',{id:id});
     socket.on('new message',(e)=>{
-        socket.emit('new message',e);
+        socket.broadcast.emit('new message',e);
     });
     socket.on('delete message',async (e)=>{
         var deletedId = await messageModel.findByIdAndUpdate({_id:e._id},{$set:{isdeleted:true}});

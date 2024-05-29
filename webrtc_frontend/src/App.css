@@ -308,13 +308,6 @@ h4{
 
 }
 
-.chat__footer{
-  bottom: 0;margin: auto;
-  background: transparent;
-  border: 1px solid gray;
-  border-radius: 5px;
-}
-
 .chat__header{
   display: flex;
   justify-content: flex-start;
@@ -333,15 +326,25 @@ h4{
   justify-content: space-between;
   align-items: center;
   padding: 20px;
+  position: fixed;
+  bottom: 0;
+  background: transparent;
+  border: 1px solid gray;
+  border-radius: 5px;
+  width: 67%;
 }
 
 .chat__footer .input-container{
   flex: 1;
+  border: 1px solid rgb(125, 44, 172) ;
+  border-radius: 10px;
+  
 }
 
 .chat__footer .icon__container{
   padding-left: 20px;
   cursor: pointer;
+  color: rgb(125, 44, 172);
 }
 
 .no__user{
@@ -351,4 +354,38 @@ h4{
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.same-user{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: max-content;
+  padding-right: 20px;
+}
+
+.selected-user{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  height: max-content;
+  padding-left: 20px;
+}
+
+.same-user span{
+  border-radius: 10px;
+  background:gray ;
+  max-width: 50%;
+  word-wrap: break-word;
+  padding: 4px;
+  margin: 2px;
+}
+
+.selected-user span{
+  border-radius: 10px;
+  background:lightgreen ;
+  max-width: 50%;
+  word-wrap: break-word;
+  padding: 4px;
+  margin: 2px;
 }
