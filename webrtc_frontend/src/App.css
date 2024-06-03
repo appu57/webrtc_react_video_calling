@@ -296,9 +296,17 @@ h4{
     background-repeat: no-repeat;
     background-size: cover;
     background-size: cover;
-    min-height: 990px;
+    height: 500px;
+    max-height: 500px;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
+    scrollbar-width: none;
+}
+
+
+.chat__content__container::-webkit-scrollbar{
+  display: none;
 }
 
 .chat__header , .chat__footer{
@@ -314,7 +322,7 @@ h4{
   padding: 10px;
   gap: 16px;
   color: white;
-  
+  position: fixed;
 }
 
 .chat__header .user__image__container .circle{
@@ -356,23 +364,25 @@ h4{
   align-items: center;
 }
 
-.same-user{
+.selected-user p{
   display: flex;
   justify-content: flex-end;
-  align-items: center;
   height: max-content;
+  align-items: flex-start;
   padding-right: 20px;
+  flex-direction: column;
 }
 
-.selected-user{
+.same-user p{
   display: flex;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-end;
   height: max-content;
   padding-left: 20px;
+  flex-direction: column;
 }
 
-.same-user span{
+.same-user p .user__message{
   border-radius: 10px;
   background:gray ;
   max-width: 50%;
@@ -381,7 +391,7 @@ h4{
   margin: 2px;
 }
 
-.selected-user span{
+.selected-user p .user__message{
   border-radius: 10px;
   background:lightgreen ;
   max-width: 50%;
@@ -389,3 +399,4 @@ h4{
   padding: 4px;
   margin: 2px;
 }
+

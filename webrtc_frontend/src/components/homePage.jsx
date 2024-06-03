@@ -43,10 +43,10 @@ const HomePage = ({setToken})=>{
            </div>
         <div className="tabs">
         <Tabs activeKey={selectedTab} onSelect={onTabSelect} onScroll={event=>event.stopPropagation()}>
-           <Tab eventKey="tab1" title="VIDEO CALL" style={{height:'545px',overflow:'hidden'}}>
+           <Tab eventKey="tab1" title="VIDEO CALL" >
                Content for Tab 1
            </Tab>
-           <Tab eventKey="tab2" title="CHATS" style={{height:'545px',overflow:'hidden'}}>
+           <Tab eventKey="tab2" title="CHATS" >
                <MainChatPage/>
            </Tab>
         </Tabs>

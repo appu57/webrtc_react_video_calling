@@ -10,6 +10,12 @@ export const MessageReducers = (state=initialState,action)=>{
             return action.payload;
         case actionTypes.lookupTable.ADD_CHATS:
             return [...state,action.payload];
+        case actionTypes.lookupTable.EDIT_CHATS:
+            // let modify=state.find((message)=>message._id == payload.id).map;
+            return state.map((data)=>
+                data._id == action.payload.id?
+                {...data,message:action.payload.message}:data
+            )
         default:
             return state;
     }
