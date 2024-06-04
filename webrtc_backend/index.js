@@ -56,6 +56,22 @@ io.on('connection',(socket)=>
         var deletedId = await messageModel.findByIdAndUpdate({_id:e._id},{$set:{isdeleted:true}});
         socket.emit('message deleted',e._id);
     })
+    socket.on('room join',function(e){
+        const {email,roomId}=e;
+        console.log(socket.id);
+        io.to(roomId).emit('user joined',{email,id:socket.id});
+        socket.join(roomId);
+        io.to(socket.id).emit("room join",e);
+    })
+    socket.on('user call',(e)=>{
+        const {to,offer}=e;
+        io.to(to).emit('incoming call',{from:socket.id,offer:offer});
+    })
+    socket.on('call accept',(e)=>{
+        const {to,answer}=e;
+        io.to(to).emit('call accept',{from:socket.id,answer:answer});
+
+    })
     console.log('Connected to Socket server');
     socket.on('close',function(){
         console.log('Disconnected from the socket server');

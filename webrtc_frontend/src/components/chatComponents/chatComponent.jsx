@@ -26,8 +26,6 @@ const ChatComponent = (props) => {
         data.updatedAt = sendMessage.data.updatedAt;
         socket.emit('new message',{data:data});
         if(chatContentRef.current){
-            console.log( chatContentRef.current.scrollTop);
-            console.log( chatContentRef.current.scrollHeight);
             chatContentRef.current.scrollTop += chatContentRef.current.scrollHeight;
         }
         dispatch(AddMessage(data));

@@ -47,7 +47,7 @@ const MessageField = (props) => {
     return (
         <div className={` message && ${messageClass}`}>
             <p> <span className="user__message">{message}</span></p>
-            <p><span onClick={editMessage}>Edit</span></p>
+            {/* <p><span onClick={editMessage}>Edit</span></p> */}
         </div>
     )
 }

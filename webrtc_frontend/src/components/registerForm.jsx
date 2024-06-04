@@ -63,14 +63,14 @@ const RegisterForm = ({ setUserLogin }) => {
     }
     return (
         <div className="form-container">
-            <form onSubmit={handleSubmit}>
+            <form >
                 <h4>{title} to explore Connect</h4>
                 <hr></hr>
                 {
                     inputField.map((input, index) => (
                         <FormInput key={index} {...input} onChange={onChange} />
                     ))}
-                <button type="submit" className="registerbtn" >{title}</button>
+                <button type="submit" className="registerbtn" onClick={handleSubmit}>{title}</button>
                 <div className="form-footer">
                     <p>{title == "Register" ? 'Already have an account ?' : 'New to Connect ?'} <span onClick={addUserName} className="navigateBtn">{title == "Register" ? 'SignIn' : 'Register'}</span></p>
                 </div>

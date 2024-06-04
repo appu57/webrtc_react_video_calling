@@ -9,6 +9,8 @@ import {SocketContext} from '../socket/socketConnection';
 import { useDispatch, useSelector } from "react-redux";
 import { lookupTable } from "../actions/taskActions";
 import axios from 'axios';
+import MainVideoPage from './videoComponents/MainVideoPage';
+
 
 const HomePage = ({setToken})=>{
     const [selectedTab , setSelectedTab] = useState('tab1');
@@ -44,7 +46,7 @@ const HomePage = ({setToken})=>{
         <div className="tabs">
         <Tabs activeKey={selectedTab} onSelect={onTabSelect} onScroll={event=>event.stopPropagation()}>
            <Tab eventKey="tab1" title="VIDEO CALL" >
-               Content for Tab 1
+               <MainVideoPage/>
            </Tab>
            <Tab eventKey="tab2" title="CHATS" >
                <MainChatPage/>
