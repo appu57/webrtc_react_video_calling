@@ -4,10 +4,12 @@ class PeerService {
         {
             this.peer = new RTCPeerConnection({
                 iceServers:[
-                    
-                    { urls: "stun:stun.services.mozilla.com" },
-                    { urls: "stun:stun1.1.google.com:19302" }
-                    
+                    {
+                        urls:[
+                            "stun:stun.services.mozilla.com",
+                            "stun:stun1.1.google.com:19302"
+                        ]
+                    }
                 ],
             })
         }

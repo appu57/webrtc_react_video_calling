@@ -71,7 +71,18 @@ io.on('connection',(socket)=>
         const {to,answer}=e;
         io.to(to).emit('call accept',{from:socket.id,answer:answer});
 
-    })
+    });
+    socket.on('negotiation',(e)=>{
+        const {offer,to}=e;
+        io.to(to).emit('negotiation',{from:socket.id,offer:offer});
+
+    });
+    
+    socket.on('negotiation completed',(e)=>{
+        const {to,answer}=e;
+        io.to(to).emit('negotiation completed',{from:socket.id,answer});
+
+    });
     console.log('Connected to Socket server');
     socket.on('close',function(){
         console.log('Disconnected from the socket server');
