@@ -11,12 +11,12 @@ const UserDisplay = (props)=>{
     const getOnlineUser = (e)=>{
       console.log(e);
     }
-    useEffect(()=>{
-      socket.on('user__online',getOnlineUser);
-      return()=>{
-          socket.off('user__online')
-      };
-    },[socket]);
+    // useEffect(()=>{
+    //   socket.on('user__online',getOnlineUser);
+    //   return()=>{
+    //       socket.off('user__online',getOnlineUser)
+    //   };
+    // },[socket,getOnlineUser]);
     return(
    <div className="user__container" key={_id}  onClick={sendSelectedUser}>
        <div className="user__image__container">

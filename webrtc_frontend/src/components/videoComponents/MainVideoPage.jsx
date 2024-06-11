@@ -1,74 +1,72 @@
 import React from 'react';
 import FormInput from '../FormInput';
-import { useContext, useEffect, useState, useCallback } from 'react';
+import { useContext, useEffect, useState, useCallback} from 'react';
+import { useDispatch, useSelector } from "react-redux";
 import {useSocket} from '../../socket/socketConnection';
 import VideoRoom from './VideoRoom';
+import UserDisplay from '../chatComponents/UserDisplay';
+import peer from '../webrtcService';
+
 
 const MainVideoPage = () => {
     const [ joinRoom,setJoinRoom]=useState(null);
+    const users = useSelector(state=>state.users);
+    const [stream,setStreams] = useState(null);
     const socket = useSocket();
-    const inputsData = [
-        {
-            id: 1,
-            name: "email",
-            placeholder: "Email",
-            type: "email"
-        },
-        {
-            id: 2,
-            name: "roomId",
-            placeholder: "RoomId",
-            type: "text"
-        }
-    ]
-    const [formValue, setFormValue] = useState(
-        {
-            email: '',
-            roomId: ''
-        }
-    );
-    const onFormValueChanges = (e) => {
-        console.log(e.target)
-        setFormValue({ ...formValue, [e.target.name]: e.target.value });
-    };
+    const [remoteSocket,setRemoteSocket] = useState(null);
 
     const handleJoin = (e) => {
-        e.stopPropagation();
-        setJoinRoom(formValue.email);
-        socket.emit('room join',formValue);
-    }
-    const handleUserJoin=useCallback((e)=>{
-        const {email,roomId}=e;
+        const currentUser = localStorage.getItem('userId');
         console.log(e);
+        setJoinRoom(e.email);
+        socket.emit('room join',{email:e.email,roomId:e._id+"_"+currentUser,selectedUser:e._id});
+        showUserMedia();
+    };
+    const handleUserJoin=useCallback((e)=>{
+      setJoinRoom(e);
+      setRemoteSocket(e.id);
     });
     const changeRoomStatus=()=>{
         setJoinRoom(null);
     }
-    // useEffect(()=>{
-    //   socket.on('room join',handleUserJoin);
-    //   return ()=>{
-    //       socket.off('room join',handleUserJoin);
-    //   }
-    // },[socket])
+    const showUserMedia =async ()=>{
+        const stream =await navigator.mediaDevices.getUserMedia({audio:true,video:true});
+        const offer = await peer.getOffer();
+        socket.emit('user call',{to:remoteSocket,offer});//create an offer and send
+        setStreams(stream);
+    }
+    useEffect(()=>{
+      if(socket)
+      {
+      socket.on('user joined',handleUserJoin);
+      
+      return ()=>{
+          socket.off('user joined',handleUserJoin);
+      }
+    }
+    },[socket,handleUserJoin])
     return (
        <div className="video__container">
            { joinRoom ?
-             (<VideoRoom changeJoinRoom={changeRoomStatus}/>):(
-               <div className="video__component" style={{ justifyContent: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', height: '545px' }}>
+             (<VideoRoom changeJoinRoom={changeRoomStatus} stream={stream} remoteSocketID={remoteSocket}/>):(
+               <div className="video__component">
                <div className="join__room__form">
                    <div className="join__room__form__container">
                        {
-                           inputsData.map((input) => (
-                                <input key={input.id} onChange={onFormValueChanges}  {...input} />
+                           users?.users?.map((user)=>(
+                               <div className="video__page--user__container" onClick={()=>handleJoin({email:user.email,_id:user._id})}>
+                                   <div className="user__avatar">
+
+                                   </div>
+                                   <div className="user__name">{user.username}</div>
+                               </div>
                            ))
                        }
    
                    </div>
-                   <button className="registerbtn" onClick={handleJoin} >Join</button>
                </div>
                <div className="button__container" style={{ margin: '10px' }}>
-                   <button className="btn button__container--joinRoom">Join a Meeting</button>
-                   <button className="btn button__container--startCall">Call</button>
+                   <h4>Click on the user to video call</h4>
                </div>
            </div>
            )}

@@ -9,7 +9,7 @@ import {SocketContext} from '../socket/socketConnection';
 import { useDispatch, useSelector } from "react-redux";
 import { lookupTable } from "../actions/taskActions";
 import axios from 'axios';
-import MainVideoPage from './videoComponents/MainVideoPage';
+import VideoRoom from './videoComponents/VideoRoom';
 
 
 const HomePage = ({setToken})=>{
@@ -27,13 +27,16 @@ const HomePage = ({setToken})=>{
 
     const onTabSelect = (e)=>{
         setSelectedTab(e);
+    }
+
+    useEffect(()=>{
         let currentUser= localStorage.getItem('userId');
         const fetchUsers = async ()=>{
             const response =await axios.post('http://localhost:3000/users/getUsers',{userId:currentUser});
             dispatch({type:lookupTable.FETCH_USER,payload:response.data});
         };
         fetchUsers();
-    }
+    },[])
     return(
        <div className="tab__container">
            <div className="tab__header">
@@ -46,7 +49,7 @@ const HomePage = ({setToken})=>{
         <div className="tabs">
         <Tabs activeKey={selectedTab} onSelect={onTabSelect} onScroll={event=>event.stopPropagation()}>
            <Tab eventKey="tab1" title="VIDEO CALL" >
-               <MainVideoPage/>
+               <VideoRoom/>
            </Tab>
            <Tab eventKey="tab2" title="CHATS" >
                <MainChatPage/>

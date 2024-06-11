@@ -402,7 +402,49 @@ h4{
 
 .video__room{
   display: flex;
-  justify-content: center;
-  align-items: center;
   flex-direction: column;
 }
+.user__avatar{
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 1px solid black;
+}
+
+.video__page--user__container{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.join__room__form__container{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  height: 100px;
+  border: 1px solid black;
+  gap: 33px;
+  padding: 16px;
+  overflow-x: auto;
+}
+
+.join__room__form__container::-webkit-scrollbar{
+  display: none;
+}
+
+.video__playing__container{
+  display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.button__container{
+   color: white;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 100px;
+    background:rgb(125, 44, 172) ;
+  }

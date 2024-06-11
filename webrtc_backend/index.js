@@ -56,16 +56,28 @@ io.on('connection',(socket)=>
         var deletedId = await messageModel.findByIdAndUpdate({_id:e._id},{$set:{isdeleted:true}});
         socket.emit('message deleted',e._id);
     })
-    socket.on('room join',function(e){
-        const {email,roomId}=e;
-        console.log(socket.id);
-        io.to(roomId).emit('user joined',{email,id:socket.id});
-        socket.join(roomId);
-        io.to(socket.id).emit("room join",e);
-    })
+    // socket.on('room join',function(e){
+    //     const {email,roomId,selectedUser}=e;
+    //     console.log(e);
+    //     socket.broadcast.emit("user joined",{email,id:socket.id});
+    //     console.log(socket.id);
+    //     socket.join(roomId);
+    //     io.to(socket.id).emit("room join",e);
+    // })
+    socket.on('user_join',(e)=>{
+        const {from,roomId,to}=e;
+        socket.broadcast.emit('user__request',{...e,id:socket.id});
+        socket.join(roomId);  
+    });
+    socket.on('user__request__accept',(e)=>{
+        socket.broadcast.emit('user__request__accept',{...e,id:socket.id});
+        socket.join(e.roomId); 
+    });
+
     socket.on('user call',(e)=>{
+        console.log(e);
         const {to,offer}=e;
-        io.to(to).emit('incoming call',{from:socket.id,offer:offer});
+        socket.to(to).emit('incoming call',{from:socket.id,offer:offer});
     })
     socket.on('call accept',(e)=>{
         const {to,answer}=e;
