@@ -4,6 +4,11 @@ import { useContext, useEffect, useState, useCallback } from 'react';
 import ReactPlayer from 'react-player';
 import peer from '../webrtcService';
 import { useDispatch, useSelector } from "react-redux";
+import { AiOutlineAudioMuted } from "react-icons/ai";
+import { FaVideoSlash } from "react-icons/fa";
+import { PiPhoneDisconnectThin } from "react-icons/pi";
+import { IoChatboxEllipsesSharp } from "react-icons/io5";
+import CameraDisabled from '../../assets/camera_disabled.jpg';
 
 
 const VideoRoom = () => {
@@ -12,9 +17,19 @@ const VideoRoom = () => {
     const [streams, setStreams] = useState(null);
     const [remoteStream, setRemoteStream] = useState(null);
     const [joinRoom, setJoinRoom] = useState(null);
+    const [videoEnabled , setVideoState] = useState(true);
+    const [remotevideoEnabled , setRemoteVideoState] = useState(true);
+
+
     const users = useSelector(state => state.users);
 
     const handleJoin = (e) => {
+        console.log(peer);
+        if(!peer.peer)
+        {
+            peer.reconnectToPeer();
+        }
+        peer.reconnectToPeer();
         const currentUser = localStorage.getItem('userId');
         console.log(e);
         setJoinRoom(e.email);
@@ -23,9 +38,17 @@ const VideoRoom = () => {
 
     const fetchTheUserCallRequest = (e) => {
         const currentUser = localStorage.getItem('userId');
-        setJoinRoom(e);
-        setRemoteSocket(e.id);
-        socket.emit('user__request__accept', { from: currentUser, roomId: currentUser + "_" + e.from, to: e.from });
+        if (currentUser == e.to) {
+            if(!peer.peer)
+            {
+                peer.reconnectToPeer();
+            }
+            setJoinRoom(e);
+            setRemoteSocket(e.id);
+            socket.emit('user__request__accept', { from: currentUser, roomId: currentUser + "_" + e.from, to: e.from });
+        } else {
+            console.log('Unknown request')
+        }
     }
 
     const fetchUserRequest = async (e) => {
@@ -61,7 +84,7 @@ const VideoRoom = () => {
     const sendStreams = useCallback(async () => {
         try {
             for (const track of streams.getTracks()) {
-                 peer.peer.addTrack(track, streams);//on call , we set tracks to send it to the user who called us so when we add tracks , an event listener is emitted called 'track' or we can go with peer.onTrack to add (remote tracks on user who called) 
+                peer.peer.addTrack(track, streams);//on call , we set tracks to send it to the user who called us so when we add tracks , an event listener is emitted called 'track' or we can go with peer.onTrack to add (remote tracks on user who called) 
             }
         } catch (e) {
             console.log(e);
@@ -78,7 +101,7 @@ const VideoRoom = () => {
         const answer = await peer.getAnswer(e.offer);
         socket.emit('negotiation completed', { to: e.from, answer });
         sendStreams();
-    }, [socket,sendStreams]);
+    }, [socket, sendStreams]);
 
     const handleNegotiationCheck = useCallback(async (e) => {
         await peer.setRemoteDescriptionForlocal(e.answer);
@@ -88,6 +111,40 @@ const VideoRoom = () => {
         const offer = await peer.getOffer();
         socket.emit('negotiation', { offer, to: remoteSocket });
     }, [remoteSocket, socket]);
+
+    const disconnectTheCall = () => {
+        try {
+            peer.disconnectCall();
+            socket.emit('disconnect call', { to: remoteSocket });
+            changeRoomStatus();
+        }
+        catch (e) {
+
+        }
+    }
+
+    const disconnectTheCallFromCallee = (e) => {
+        changeRoomStatus();
+    }
+
+    const onMute =()=>{
+        streams.getTracks().forEach(track=>{
+            if(track.kind == 'audio')
+            {
+                track.enabled = !track.enabled;
+            }
+        });
+    };
+    const onVideoDisable=()=>{
+        // const videoState = streams.getVidoTracks()[0].enabled;
+        // streams.getVidoTracks()[0].enabled = !videoState;
+        streams.getTracks().forEach(track=>{
+            if(track.kind == 'video')
+            {
+                track.enabled = !track.enabled;
+            }
+        });
+    }
 
     useEffect(() => {
         peer.peer.addEventListener('negotiationneeded', handleNegotiationForEvent);
@@ -112,6 +169,7 @@ const VideoRoom = () => {
             socket.on('call accept', fetchUserAcceptance)
             socket.on('negotiation', handleNegotiation)
             socket.on('negotiation completed', handleNegotiationCheck);
+            socket.on('disconnect call', disconnectTheCallFromCallee);
 
             return () => {
                 socket.off('user__request__accept', fetchUserRequest);
@@ -121,6 +179,8 @@ const VideoRoom = () => {
                 socket.off('call accept', fetchUserAcceptance);
                 socket.off('negotiation', handleNegotiation)
                 socket.off('negotiation completed', handleNegotiationCheck);
+                socket.on('disconnect call', disconnectTheCallFromCallee);
+
 
             }
         }
@@ -133,16 +193,22 @@ const VideoRoom = () => {
                         <h1 onClick={changeRoomStatus}>Video Room </h1>
                         <div className="video__playing__container">
                             {
-                                streams && (<ReactPlayer playing className="stream" height="400px" width="500px" url={streams} />)
+                                streams && videoEnabled ?
+                                (<ReactPlayer playing className="stream" height="400px" width="500px" url={streams} />)
+                                :(<img src={CameraDisabled} alt="Camera disabled" width="400px" height="400px"/>)
                             }
                             {
                                 remoteStream && (<ReactPlayer playing className="rstream" height="400px" width="500px" url={remoteStream} />)
+                                // :(<img src={CameraDisabled} alt="Camera disabled" width="400px" height="400px"/>)
+
                             }
+                           
                         </div>
                         <div className="button__container">
-                            <div className="button--mute">Mute</div>
-                            <div className="button--video">Video</div>
-                            <div className="button--disconnect">Disconnect</div>
+                            <div className="button button--mute" onClick={onMute}><AiOutlineAudioMuted/></div>
+                            <div className="button button--video" onClick={onVideoDisable}><FaVideoSlash/></div>
+                            <div className="button button--disconnect" onClick={disconnectTheCall}><PiPhoneDisconnectThin/></div>
+                            <div className="button button--chat"><IoChatboxEllipsesSharp/></div>
 
                         </div>
                     </div>

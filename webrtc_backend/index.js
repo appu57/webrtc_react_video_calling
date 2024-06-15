@@ -95,6 +95,10 @@ io.on('connection',(socket)=>
         io.to(to).emit('negotiation completed',{from:socket.id,answer});
 
     });
+
+    socket.on('disconnect call',(e)=>{
+        io.to(e.to).emit('disconnect call',{from :socket.id})
+    })
     console.log('Connected to Socket server');
     socket.on('close',function(){
         console.log('Disconnected from the socket server');
