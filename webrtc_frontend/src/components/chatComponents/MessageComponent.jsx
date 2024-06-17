@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { EditMessage } from '../../actions/taskActions';
 import { FiEdit2 } from "react-icons/fi";
 import { FaCheck } from "react-icons/fa";
+import {useSocket} from '../../socket/socketConnection';
 
 
 const MessageField = (props) => {
@@ -13,6 +14,7 @@ const MessageField = (props) => {
     const messageRef = useRef(null);
     const [editMessageEnabled,setEditMessageEnabled]=useState(null);
     let dispatch = useDispatch();
+    const socket = useSocket();
     const calculateTime =()=>{
         const givenDate = new Date(updatedAt);
         const currentDate = new Date();
@@ -56,6 +58,7 @@ const MessageField = (props) => {
              messageRef.current.replaceWith(input);
             messageRef.current=input;
             messageRef.current.focus();
+            messageRef.current.style.height="max-content"
 
         }
     }
@@ -63,6 +66,7 @@ const MessageField = (props) => {
         setEditMessageEnabled(false);  
         const span = document.createElement('span');
         span.className='user__message';
+        span.id=messageRef.current.id;
         span.innerText=messageRef.current.value;
         applyStyle(messageRef.current,span,span.innerText);
         messageRef.current.replaceWith(span);
@@ -71,7 +75,11 @@ const MessageField = (props) => {
             id:messageRef.current.id,
             message:message
         }
+        messageRef.current.style.width="max-content";
+        messageRef.current.style.height="max-content"
         dispatch(EditMessage(payload));
+        socket.emit('edit Message',{_id:id,message:span.innerText});
+
     }
     const applyStyle=(source,target,value)=>{
         const styles = getComputedStyle(source);

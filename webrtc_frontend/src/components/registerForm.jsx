@@ -7,7 +7,7 @@ import {useNavigate} from 'react-router-dom';
 const RegisterForm = ({ setUserLogin }) => {
     const [title, setTitle] = useState("Register");
     const navaigation = useNavigate();
-    const [setUser] = useContext(UserContext);
+    const [user,setUser] = useContext(UserContext);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -16,6 +16,11 @@ const RegisterForm = ({ setUserLogin }) => {
             const response = await axios.post(`http://localhost:3000/users/${endpoint}`, formValues);
             if (response.data.status && title == "SignIn") {
                 localStorage.setItem('userId',response.data.user._id);
+                setUser({
+                  isLogged:true,
+                  userId:response.data.user._id,
+                  username:response.data.user.username
+                });
                 setUserLogin(response.data.user._id);
                 navaigation('/home')
             }

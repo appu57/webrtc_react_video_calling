@@ -11,6 +11,7 @@ import { IoChatboxEllipsesSharp } from "react-icons/io5";
 import CameraDisabled from '../../assets/camera_disabled.jpg';
 import ShowCallScreen from '../chatComponents/showCall';
 import { FaVideo } from "react-icons/fa";
+import {UserContext} from '../../socket/loginContext';
 
 import { FaMicrophoneAlt } from "react-icons/fa";
 const VideoRoom = () => {
@@ -23,8 +24,9 @@ const VideoRoom = () => {
     const [audioEnabled, setAudioState] = useState(true);
     const [calling, setCalling] = useState(false);
     const [selectedUser,setSelectedUser]=useState(null);
-    const [status , setStatus]=useState(false);
-    const [remoteUserId,setCallerUserId]=useState(null);
+    const [remoteUser , setRemoteUser]=useState(null);
+    let [user,setUser] = useContext(UserContext);
+
     
     const currentUser = localStorage.getItem('userId');
     const users = useSelector(state => state.users);
@@ -34,9 +36,10 @@ const VideoRoom = () => {
             peer.reconnectToPeer();
         }
         peer.reconnectToPeer();
-        socket.emit('user_join', { from: currentUser, roomId: e._id + "_" + currentUser, to: e._id });
+        socket.emit('user_join', { from: currentUser, roomId: e._id + "_" + currentUser, to: e._id,username:user.username});
         setCalling(true);
-        setSelectedUser(e.username);
+        setRemoteUser(e.username);
+
     };
 
     const fetchTheUserJoinRequest = (e) => {
@@ -45,10 +48,9 @@ const VideoRoom = () => {
                 peer.reconnectToPeer();
             }
             setRemoteSocket(e.id);
-            setCallerUserId(e);
             setSelectedUser(e.from);
             setCalling(true);
-            setStatus(true);
+            setRemoteUser(e.username);
         } else {
             console.log('Unknown request')
         }
@@ -70,11 +72,23 @@ const VideoRoom = () => {
         setJoinRoom(null);
     }
     const rejectTheCall=(e)=>{
-        setJoinRoom(e);
-        setCalling(false);
-        if(status && e.answer)
+        console.log(e);
+        if(remoteUser && e.answer)
         {
-            socket.emit('user__request__accept', { from: currentUser, roomId: currentUser + "_" + e.from, to: e.from });
+            setJoinRoom(e);
+            socket.emit('user__request__accept', { from: currentUser, roomId: currentUser + "_" + selectedUser, to: selectedUser });
+        }
+        else{
+        setCalling(false);
+        socket.emit('reject call',{to:selectedUser});
+        }
+
+    }
+    const callReject = (e)=>{
+        console.log(e);
+        if(e.to == user.userId)
+        {
+            setCalling(false); 
         }
     }
     const showUserMedia = useCallback(async (e) => {
@@ -150,8 +164,6 @@ const VideoRoom = () => {
         });
     };
     const onVideoDisable = () => {
-        // const videoState = streams.getVidoTracks()[0].enabled;
-        // streams.getVidoTracks()[0].enabled = !videoState;
         streams.getTracks().forEach(track => {
             if (track.kind == 'video') {
                 track.enabled = !track.enabled;
@@ -184,6 +196,7 @@ const VideoRoom = () => {
             socket.on('negotiation', handleNegotiation)
             socket.on('negotiation completed', handleNegotiationCheck);
             socket.on('disconnect call', disconnectTheCallFromCallee);
+            socket.on('reject the call',callReject);
 
             return () => {
                 socket.off('user__request__accept', fetchUserRequest);
@@ -193,7 +206,8 @@ const VideoRoom = () => {
                 socket.off('call accept', fetchUserAcceptance);
                 socket.off('negotiation', handleNegotiation)
                 socket.off('negotiation completed', handleNegotiationCheck);
-                socket.on('disconnect call', disconnectTheCallFromCallee);
+                socket.off('disconnect call', disconnectTheCallFromCallee);
+                socket.off('reject the call',callReject)
 
 
             }
@@ -228,7 +242,7 @@ const VideoRoom = () => {
 
                         <div className="video__component">
                             {
-                                calling ? (<ShowCallScreen  to={selectedUser} rejectTheCall={rejectTheCall} innerText="Calling" status={status}/>) : (
+                                calling ? (<ShowCallScreen  to={remoteUser} rejectTheCall={rejectTheCall} innerText={!selectedUser && "Calling"} remoteUser={selectedUser}/>) : (
                                     <div className="join__room__form">
                                         <div className="join__room__form__container">
                                             {

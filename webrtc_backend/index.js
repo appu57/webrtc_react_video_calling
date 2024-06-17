@@ -55,15 +55,16 @@ io.on('connection',(socket)=>
     socket.on('delete message',async (e)=>{
         var deletedId = await messageModel.findByIdAndUpdate({_id:e._id},{$set:{isdeleted:true}});
         socket.emit('message deleted',e._id);
+    });
+    socket.on('edit Message',async(e)=>{
+        await messageModel.findByIdAndUpdate({_id:e._id},{$set:{message:e.message}});
+        const newMessage = await messageModel.findById({_id:e._id});
+        socket.broadcast.emit('message updated',newMessage);
+    });
+    socket.on('reject call',(e)=>{
+        console.log(e);
+        socket.broadcast.emit('reject the call',{...e});
     })
-    // socket.on('room join',function(e){
-    //     const {email,roomId,selectedUser}=e;
-    //     console.log(e);
-    //     socket.broadcast.emit("user joined",{email,id:socket.id});
-    //     console.log(socket.id);
-    //     socket.join(roomId);
-    //     io.to(socket.id).emit("room join",e);
-    // })
     socket.on('user_join',(e)=>{
         const {from,roomId,to}=e;
         socket.broadcast.emit('user__request',{...e,id:socket.id});

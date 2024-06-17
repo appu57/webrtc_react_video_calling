@@ -517,7 +517,7 @@ h4{
     width: 50%;
 }
 
-.video__component{
+.screen__container{
   display: flex;
   justify-content: center;
 }

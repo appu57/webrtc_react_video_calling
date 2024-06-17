@@ -18,7 +18,8 @@ import { useState } from 'react';
 function App() {
   const [user, setUser] = useState({
     isLogged: false,
-    userId: null
+    userId: null,
+    username:null
   });
   const [token,setToken]  = useState(null);
   return (

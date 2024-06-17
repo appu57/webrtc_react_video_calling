@@ -4,7 +4,7 @@ import { useSocket } from '../../socket/socketConnection';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import MessageField from './MessageComponent';
-import { AddMessage } from '../../actions/taskActions'
+import { AddMessage ,EditMessage} from '../../actions/taskActions'
 
 const ChatComponent = (props) => {
     const { user, id } = props;
@@ -46,14 +46,20 @@ const ChatComponent = (props) => {
         }
 
     }
+    const editTheMessage=(e)=>{
+        console.log(e);
+        dispatch(EditMessage({id:e._id,message:e.message}));
+    }
     useEffect(() => {
         if (socket) {
             socket.on('new message', fetchNewMessage);
+            socket.on('message updated',editTheMessage);
             return () => {
-                socket.off('new message')
+                socket.off('new message');
+                socket.off('message updated',editTheMessage);
             };
         }
-        }, [socket]);
+        }, [socket,fetchNewMessage,editTheMessage]);
     useEffect(() => {
         if (chatContentRef.current) { //whenever we dispatch a message , store gets modified.On updation of store scroll
             chatContentRef.current.scrollTop *= chatContentRef.current.clientHeight;
