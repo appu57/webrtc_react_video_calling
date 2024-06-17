@@ -10,8 +10,9 @@ import { PiPhoneDisconnectThin } from "react-icons/pi";
 import { IoChatboxEllipsesSharp } from "react-icons/io5";
 import CameraDisabled from '../../assets/camera_disabled.jpg';
 import ShowCallScreen from '../chatComponents/showCall';
+import { FaVideo } from "react-icons/fa";
 
-
+import { FaMicrophoneAlt } from "react-icons/fa";
 const VideoRoom = () => {
     const socket = useSocket();
     const [remoteSocket, setRemoteSocket] = useState(null);
@@ -19,6 +20,7 @@ const VideoRoom = () => {
     const [remoteStream, setRemoteStream] = useState(null);
     const [joinRoom, setJoinRoom] = useState(null);
     const [videoEnabled, setVideoState] = useState(true);
+    const [audioEnabled, setAudioState] = useState(true);
     const [calling, setCalling] = useState(false);
     const [selectedUser,setSelectedUser]=useState(null);
     const [status , setStatus]=useState(false);
@@ -68,6 +70,7 @@ const VideoRoom = () => {
         setJoinRoom(null);
     }
     const rejectTheCall=(e)=>{
+        setJoinRoom(e);
         setCalling(false);
         if(status && e.answer)
         {
@@ -83,7 +86,6 @@ const VideoRoom = () => {
     }, [socket, streams])
 
     const fetchOffer = useCallback(async (e) => {
-        setJoinRoom(e);
         setRemoteSocket(e.from);
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
         setStreams(stream);
@@ -139,9 +141,11 @@ const VideoRoom = () => {
     }
 
     const onMute = () => {
+        
         streams.getTracks().forEach(track => {
             if (track.kind == 'audio') {
                 track.enabled = !track.enabled;
+                setAudioState(track.enabled);
             }
         });
     };
@@ -151,6 +155,7 @@ const VideoRoom = () => {
         streams.getTracks().forEach(track => {
             if (track.kind == 'video') {
                 track.enabled = !track.enabled;
+                setVideoState(track.enabled);
             }
         });
     }
@@ -199,26 +204,23 @@ const VideoRoom = () => {
             {
                 joinRoom ? (
                     <div className="video__room__container" >
-                        <h1 onClick={changeRoomStatus}>Video Room </h1>
                         <div className="video__playing__container">
                             {
                                 streams && videoEnabled ?
-                                    (<ReactPlayer playing className="stream" height="400px" width="500px" url={streams} />)
-                                    : (<img src={CameraDisabled} alt="Camera disabled" width="400px" height="400px" />)
+                                    (<ReactPlayer playing className="stream" height="400px" width="50%" url={streams} />)
+                                    : (<img src={CameraDisabled} alt="Camera disabled" width="400px" height="20%" />)
                             }
                             {
-                                remoteStream && (<ReactPlayer playing className="rstream" height="400px" width="500px" url={remoteStream} />)
-                                // :(<img src={CameraDisabled} alt="Camera disabled" width="400px" height="400px"/>)
+                                remoteStream &&  (<ReactPlayer playing className="rstream" height="400px" width="50%" url={remoteStream} />)
+                                // :(<img src={CameraDisabled} alt="Camera disabled" width="50%" height="400px"/>)
 
                             }
 
                         </div>
                         <div className="button__container">
-                            <div className="button button--mute" onClick={onMute}><AiOutlineAudioMuted /></div>
-                            <div className="button button--video" onClick={onVideoDisable}><FaVideoSlash /></div>
-                            <div className="button button--disconnect" onClick={disconnectTheCall}><PiPhoneDisconnectThin /></div>
-                            <div className="button button--chat"><IoChatboxEllipsesSharp /></div>
-
+                            <div className="button button--mute" onClick={onMute}>{!audioEnabled?(<AiOutlineAudioMuted />):(<FaMicrophoneAlt/>)}</div>
+                            <div className="button button--video" onClick={onVideoDisable}>{!videoEnabled?(<FaVideoSlash />):(<FaVideo/>)}</div>
+                            <div className="button button--disconnect" onClick={changeRoomStatus}><PiPhoneDisconnectThin /></div>
                         </div>
                     </div>
                 ) :

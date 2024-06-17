@@ -70,7 +70,7 @@
 .form-container {
   /* background: #db366d; */
   width: 100%;
-  height: 500px;
+  height: 80%;
   border-radius: 10px;
   /* display: block; */
   /* justify-content: center; */
@@ -159,7 +159,6 @@ h4{
 
 .formInput{
   width: 90%;
-  max-width: 100vw;
 }
 
 .inputClass{
@@ -322,7 +321,8 @@ h4{
   padding: 10px;
   gap: 16px;
   color: white;
-  position: fixed;
+  position: sticky;
+  top: 0;
 }
 
 .chat__header .user__image__container .circle{
@@ -366,20 +366,20 @@ h4{
 
 .selected-user p{
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   height: max-content;
-  align-items: flex-start;
+  align-items: center;
   padding-right: 20px;
-  flex-direction: column;
+  flex-direction: row;
 }
 
 .same-user p{
   display: flex;
-  justify-content: flex-start;
-  align-items: flex-end;
+  justify-content: flex-end;
+  align-items: center;
   height: max-content;
   padding-left: 20px;
-  flex-direction: column;
+  flex-direction: row;
 }
 
 .same-user p .user__message{
@@ -409,6 +409,8 @@ h4{
   background: black;
   display: flex;
   flex-direction: column;
+  padding: 2%;
+  height: 90%;
 
 }
 .user__avatar{
@@ -475,6 +477,16 @@ h4{
 
 .button{
   cursor: pointer;
+  width: 30px;
+  height: 30px;
+  border: transparent;
+  background: grey;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: black;
+
 }
 
 @media (max-width:700px)
@@ -502,4 +514,13 @@ h4{
     border-radius: 10px;
     color: white;
     padding: 20px;
+    width: 50%;
+}
+
+.video__component{
+  display: flex;
+  justify-content: center;
+}
+.icon{
+  cursor: pointer;
 }
